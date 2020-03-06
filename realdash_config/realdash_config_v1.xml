@@ -31,26 +31,26 @@
            Example: conversion="B0+15*(B1-43)" and conversionABC="A+15*(B-43)" are the same -->
 
       <!-- 1. CAN frame -->
-      <value targetId="37" offset="0" length="2"></value>
-      <value targetId="31" offset="2" length="2" ></value>
-      <value targetId="14" offset="4" length="2" ></value>
-      <value targetId="42" offset="6" length="2" ></value>
+      <value targetId="37" offset="0" length="2" units="km/h" ></value>
+      <value targetId="31" offset="2" length="2" units="km/h" ></value>
+      <value targetId="14" offset="4" length="2" units="km/h" ></value>
+      <value targetId="42" offset="6" length="2" units="km/h" ></value>
     </frame>
       
     <!-- 2. CAN frame -->
     <frame id="3201">
-      <value targetId="37" offset="0" length="2"></value>
-      <value targetId="31" offset="2" length="2" ></value>
-      <value targetId="14" offset="4" length="2" ></value>
-      <value targetId="42" offset="6" length="2" ></value>
+      <value targetId="37" offset="0" length="2" units="km/h" ></value>
+      <value targetId="31" offset="2" length="2" units="km/h" ></value>
+      <value targetId="14" offset="4" length="2" units="km/h" ></value>
+      <value targetId="42" offset="6" length="2" units="km/h" ></value>
     </frame>
 
     <!-- 3. CAN frame -->
     <frame id="3202">
-      <value targetId="37" offset="0" length="2"></value>
-      <value targetId="31" offset="2" length="2" ></value>
-      <value targetId="14" offset="4" length="2" ></value>
-      <value targetId="42" offset="6" length="2" ></value>
+      <value targetId="37" offset="0" length="2" units="km/h" ></value>
+      <value targetId="31" offset="2" length="2" units="km/h" ></value>
+      <value targetId="14" offset="4" length="2" units="km/h" ></value>
+      <value targetId="42" offset="6" length="2" units="km/h" ></value>
     </frame>
 
   </frames>
