@@ -1,0 +1,12 @@
+ID	Beschreibung			Data Type	 	Target identifiers (Name)	Target identifiers (ID)
+0	RPM						int				RPM 						37
+1	Speed					int	Vehicle 	Speed 						64
+2	High beam				bool (0/1)		High Beam 					157
+3	Alternator				bool (0/1)		Battery Voltage 			12
+4	Water Temperatur Ind.	bool (0/1)		Coolant Temperature 		14
+5	Oil Temperatur Ind.		bool (0/1)		Engine Oil Temperature 		152
+6	Coke 					bool (0/1)		
+7	Left indicator			bool (0/1)		Turn Signal Left 			160
+8	Right indicator			bool (0/1)		Turn Signal Right 			161
+9	Gear					String			Gear 						200
+10	Fuel Level				int				Fuel Level 					170
