@@ -110,15 +110,31 @@ void loop(){
     //Set Fuel Level
     fuelCalc();
     
+    //set dummy data
+    data[0] = 4870;
+    data[1] = 123;
+    data[2] = 1;
+    data[3] = 1;
+    data[4] = 0;
+    data[5] = 1;
+    data[6] = 0;
+    data[7] = 1;
+    data[8] = 0;
+    data[9] = 0;
+    data[10] = 60;
+    
     // Build data string
     dataStr = convArray2String(data, dataSize);
     Serial.println(dataStr);
     
+    //Send data array via serial
+    SendCANFramesToSerial(data);
+    
     // Convert string to byte
-    int len = dataStr.length() + 1;
-    byte buf[len];
-    dataStr.getBytes(buf, len);
-    hm10.write(buf, len);
+    //int len = dataStr.length() + 1;
+    //byte buf[len];
+    //dataStr.getBytes(buf, len);
+    //hm10.write(buf, len);
 }
 
 // This code will be executed every time the interrupt 0 (pin2) gets low
@@ -371,11 +387,11 @@ void SendCANFrameToSerial(unsigned long canFrameId, const byte* frameData)
   // the 4 byte identifier at the beginning of each CAN frame
   // this is required for RealDash to 'catch-up' on ongoing stream of CAN frames
   const byte serialBlockTag[4] = { 0x44, 0x33, 0x22, 0x11 };
-  Serial.write(serialBlockTag, 4);
+  hm10.write(serialBlockTag, 4);
 
   // the CAN frame id number (as 32bit little endian value)
-  Serial.write((const byte*)&canFrameId, 4);
+  hm10.write((const byte*)&canFrameId, 4);
 
   // CAN frame payload
-  Serial.write(frameData, 8);
+  hm10.write(frameData, 8);
 }
