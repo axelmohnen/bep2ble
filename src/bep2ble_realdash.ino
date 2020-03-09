@@ -346,6 +346,7 @@ void fuelCalc(){
 void SendCANFramesToSerial(aData)
 {
   byte buf[8];
+  string sGear;
 
   // build & send CAN frames to RealDash.
   // a CAN frame payload is always 8 bytes containing data in a manner
@@ -373,12 +374,21 @@ void SendCANFramesToSerial(aData)
   
   // build 3. CAN frame
   memcpy(buf, aData[8], 2);
-  memcpy(buf + 2, aData[9], 2);
-  memcpy(buf + 4, aData[10], 2);
-  memcpy(buf + 6, aData[11], 2);
+ memcpy(buf + 2, aData[10], 2);
+  memcpy(buf + 4, aData[11], 2);
+  memcpy(buf + 6, aData[12], 2);
 
   // write 3. CAN frame to serial
   SendCANFrameToSerial(3202, buf);
+    
+  //build 4. CAN frame (text extension)
+    if (aData[9] == 0){
+        sGear = 'N';
+    }
+    else{
+        sGear = aData[9];   
+    }
+    SendTextExtensionFrameToSerial(3203, sGear);
 }
 
 
@@ -394,4 +404,21 @@ void SendCANFrameToSerial(unsigned long canFrameId, const byte* frameData)
 
   // CAN frame payload
   hm10.write(frameData, 8);
+}
+
+void SendTextExtensionFrameToSerial(unsigned long canFrameId, const char* text)
+{
+  if (text)
+  {
+    // the 4 byte identifier at the beginning of each CAN frame
+    // this is required for RealDash to 'catch-up' on ongoing stream of CAN frames
+    const byte textExtensionBlockTag[4] = { 0x55, 0x33, 0x22, 0x11 };
+    hm10.write(textExtensionBlockTag, 4);
+
+    // the CAN frame id number (as 32bit little endian value)
+    hm10.write((const byte*)&canFrameId, 4);
+
+    // text payload
+    hm10.write(text, strlen(text) + 1);
+  }
 }
