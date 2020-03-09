@@ -31,25 +31,24 @@
            Example: conversion="B0+15*(B1-43)" and conversionABC="A+15*(B-43)" are the same -->
 
       <!-- 1. CAN frame -->
-      <value targetId="37" offset="0" length="2" units="" ></value>
-      <value targetId="64" offset="2" length="2" units="km/h" ></value>
-      <value targetId="157" offset="4" length="2" units="bit" ></value>
-      <value targetId="12" offset="6" length="2" units="bit" ></value>
+      <value targetId="37" offset="0" length="2" units="" ></value>       <!-- RPM -->
+      <value targetId="64" offset="2" length="2" units="km/h" ></value>   <!-- Speed -->
+      <value targetId="157" offset="4" length="2" units="bit" ></value>   <!-- High Beam -->
+      <value targetId="12" offset="6" length="2" units="bit" ></value>    <!-- Battery Voltage  -->
     </frame>
       
     <!-- 2. CAN frame -->
     <frame id="3201">
-      <value targetId="12" offset="0" length="2" units="bit" ></value>
-      <value targetId="14" offset="2" length="2" units="bit" ></value>
-      <value targetId="14" offset="4" length="2" units="bit" ></value>
-      <value targetId="152" offset="6" length="2" units="bit" ></value>
+      <value targetId="14" offset="0" length="2" units="bit" ></value>    <!-- Coolant Temperature -->
+      <value targetId="152" offset="2" length="2" units="bit" ></value>    <!-- Engine Oil Temperature -->
+      <value name="myChoke" offset="4" length="2" units="bit" ></value>    <!-- Choke -->
+      <value targetId="160" offset="6" length="2" units="bit" ></value>   <!-- Turn Signal Left -->
     </frame>
 
     <!-- 3. CAN frame -->
     <frame id="3202">
-      <value targetId="160" offset="0" length="2" units="bit" ></value>
-      <value targetId="161" offset="2" length="2" units="bit" ></value>
-      <value targetId="170" offset="4" length="2" units="" ></value>
+      <value targetId="161" offset="0" length="2" units="bit" ></value> <!-- Turn Signal Right -->
+      <value targetId="170" offset="2" length="2" units="%" ></value>   <!-- Turn Signal Left -->
     </frame>
 
     <frame id="3203">
