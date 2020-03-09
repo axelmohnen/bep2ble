@@ -31,27 +31,36 @@
            Example: conversion="B0+15*(B1-43)" and conversionABC="A+15*(B-43)" are the same -->
 
       <!-- 1. CAN frame -->
-      <value targetId="37" offset="0" length="2" units="km/h" ></value>
-      <value targetId="31" offset="2" length="2" units="km/h" ></value>
-      <value targetId="14" offset="4" length="2" units="km/h" ></value>
-      <value targetId="42" offset="6" length="2" units="km/h" ></value>
+      <value targetId="37" offset="0" length="2" units="" ></value>
+      <value targetId="64" offset="2" length="2" units="km/h" ></value>
+      <value targetId="157" offset="4" length="2" units="bit" ></value>
+      <value targetId="12" offset="6" length="2" units="bit" ></value>
     </frame>
       
     <!-- 2. CAN frame -->
     <frame id="3201">
-      <value targetId="37" offset="0" length="2" units="km/h" ></value>
-      <value targetId="31" offset="2" length="2" units="km/h" ></value>
-      <value targetId="14" offset="4" length="2" units="km/h" ></value>
-      <value targetId="42" offset="6" length="2" units="km/h" ></value>
+      <value targetId="12" offset="0" length="2" units="bit" ></value>
+      <value targetId="14" offset="2" length="2" units="bit" ></value>
+      <value targetId="14" offset="4" length="2" units="bit" ></value>
+      <value targetId="152" offset="6" length="2" units="bit" ></value>
     </frame>
 
     <!-- 3. CAN frame -->
     <frame id="3202">
-      <value targetId="37" offset="0" length="2" units="km/h" ></value>
-      <value targetId="31" offset="2" length="2" units="km/h" ></value>
-      <value targetId="14" offset="4" length="2" units="km/h" ></value>
-      <value targetId="42" offset="6" length="2" units="km/h" ></value>
+      <value targetId="160" offset="0" length="2" units="bit" ></value>
+      <value targetId="161" offset="2" length="2" units="bit" ></value>
+      <value targetId="170" offset="4" length="2" units="" ></value>
     </frame>
 
+    <frame id="3203">
+      <!-- 4th CAN frame, text extension frame -->
+      <!-- Text extension frame requires RealDash 1.4.1 or newer -->
+      <!-- declare own unique CAN id for each text value. -->
+      <!-- the text extension frame always consumes entire CAN id, multiple text strings cannot be added to one frame. -->
+
+      <!-- units must be set to "text" -->
+      <!-- offset, length and conversion values have no meaning with text data -->
+      <value name="myGearText" units="text"></value>
+    </frame>
   </frames>
 </RealDashCAN>
