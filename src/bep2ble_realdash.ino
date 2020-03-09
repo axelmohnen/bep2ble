@@ -1,5 +1,6 @@
 // ------------------------------------------------------------
-// BEP2BLE
+// BEP2BLE for Real Dash
+// CAN Protocol
 // ------------------------------------------------------------
 //Define pins
 #include <SoftwareSerial.h>
@@ -343,10 +344,9 @@ void fuelCalc(){
     }
 }
 
-void SendCANFramesToSerial(aData)
-{
+void SendCANFramesToSerial(int aData[]){
   byte buf[8];
-  string sGear;
+  char aGear[1];
 
   // build & send CAN frames to RealDash.
   // a CAN frame payload is always 8 bytes containing data in a manner
@@ -374,7 +374,7 @@ void SendCANFramesToSerial(aData)
   
   // build 3. CAN frame
   memcpy(buf, aData[8], 2);
- memcpy(buf + 2, aData[10], 2);
+  memcpy(buf + 2, aData[10], 2);
   memcpy(buf + 4, aData[11], 2);
   memcpy(buf + 6, aData[12], 2);
 
@@ -383,12 +383,12 @@ void SendCANFramesToSerial(aData)
     
   //build 4. CAN frame (text extension)
     if (aData[9] == 0){
-        sGear = 'N';
+        aGear[0] = "N";
     }
     else{
-        sGear = aData[9];   
+        aGear[0] = aData[9];   
     }
-    SendTextExtensionFrameToSerial(3203, sGear);
+    SendTextExtensionFrameToSerial(3203, aGear[0]);
 }
 
 
