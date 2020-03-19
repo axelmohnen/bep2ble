@@ -48,7 +48,7 @@
     <!-- 3. CAN frame -->
     <frame id="3202">
       <value targetId="161" offset="0" length="2" units="bit" ></value> <!-- Turn Signal Right -->
-      <value targetId="170" offset="2" length="2" units="%" ></value>   <!-- Turn Signal Left -->
+      <value targetId="170" offset="2" length="2" units="%" ></value>   <!-- Fuel level -->
     </frame>
 
     <frame id="3203">
