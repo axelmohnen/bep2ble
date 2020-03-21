@@ -13,7 +13,7 @@ const int altPin = 7;     //data[3]
 const int tmpPin = 8;     //data[4]
 const int oilPin = 9;     //data[5]
 const int chkPin = 10;     //data[6]
-SoftwareSerial hm10(11, 12);  // RX, TX
+SoftwareSerial hc06(11, 12);  // RX, TX
 const int nPin = 13;      //data[9]
 const int gear1Pin = 14;    //data[9]
 const int gear2Pin = 15;    //data[9]
@@ -39,9 +39,10 @@ unsigned long millisLast = 0;
 unsigned long millisDiff = 0;
 int data[dataSize]; 
 
+
 void setup(){
     Serial.begin(9600);
-    hm10.begin(9600);
+    hc06.begin(9600);
     pinMode(rpmPin, INPUT_PULLUP);
     pinMode(speedPin, INPUT_PULLUP);
     pinMode(hibPin, INPUT);
@@ -78,8 +79,6 @@ void setup(){
 }
 
 void loop(){
-  String dataStr = "";
-
   //Update every one second, this will be equal to reading frecuency (Hz).
     millisDiff = millis() - millisLast;
   if (millisDiff >= interval){ 
@@ -112,30 +111,20 @@ void loop(){
     fuelCalc();
     
     //set dummy data
-    data[0] = 4870;
+    data[0] = 7000;
     data[1] = 123;
-    data[2] = 1;
-    data[3] = 1;
-    data[4] = 0;
-    data[5] = 1;
-    data[6] = 0;
-    data[7] = 1;
-    data[8] = 0;
-    data[9] = 0;
-    data[10] = 60;
-    
-    // Build data string
-    dataStr = convArray2String(data, dataSize);
-    Serial.println(dataStr);
-    
+    //data[2] = 1;
+    //data[3] = 1;
+    //data[4] = 0;
+    //data[5] = 1;
+    //data[6] = 0;
+    //data[7] = 0;
+    //data[8] = 0;
+    //data[9] = 2;
+    data[10] = 50;
+      
     //Send data array via serial
     SendCANFramesToSerial(data);
-    
-    // Convert string to byte
-    //int len = dataStr.length() + 1;
-    //byte buf[len];
-    //dataStr.getBytes(buf, len);
-    //hm10.write(buf, len);
 }
 
 // This code will be executed every time the interrupt 0 (pin2) gets low
@@ -273,7 +262,7 @@ void setIndLeft(){
       data[7] = 1;
     }
     else {
-      data[7] = 0; 
+      data[7] = 0;
     }    
 }
 
@@ -347,7 +336,13 @@ void fuelCalc(){
 void SendCANFramesToSerial(int aData[]){
   byte buf[8];
   char aGear[1];
-
+  const char* cGear = "";
+  String dataStr = "";
+  
+    // Build data string
+    dataStr = convArray2String(data, dataSize);
+    Serial.println(dataStr);
+    
   // build & send CAN frames to RealDash.
   // a CAN frame payload is always 8 bytes containing data in a manner
   // described by the RealDash custom channel description XML file
@@ -355,40 +350,54 @@ void SendCANFramesToSerial(int aData[]){
   // endianess of the values can be specified in XML file if it is required to use big endian values
 
   // build 1. CAN frame
-  memcpy(buf, aData[0], 2);
-  memcpy(buf + 2, aData[1], 2);
-  memcpy(buf + 4, aData[2], 2);
-  memcpy(buf + 6, aData[3], 2);
+  memcpy(buf, &aData[0], 2);
+  memcpy(buf + 2, &aData[1], 2);
+  memcpy(buf + 4, &aData[2], 2);
+  memcpy(buf + 6, &aData[3], 2);
 
   // write 1. CAN frame to serial
   SendCANFrameToSerial(3200, buf);
-  
+
    // build 2. CAN frame
-  memcpy(buf, aData[4], 2);
-  memcpy(buf + 2, aData[5], 2);
-  memcpy(buf + 4, aData[6], 2);
-  memcpy(buf + 6, aData[7], 2);
+  memcpy(buf, &aData[4], 2);
+  memcpy(buf + 2, &aData[5], 2);
+  memcpy(buf + 4, &aData[6], 2);
+  memcpy(buf + 6, &aData[7], 2);
 
   // write 2. CAN frame to serial
   SendCANFrameToSerial(3201, buf);
   
   // build 3. CAN frame
-  memcpy(buf, aData[8], 2);
-  memcpy(buf + 2, aData[10], 2);
-  memcpy(buf + 4, aData[11], 2);
-  memcpy(buf + 6, aData[12], 2);
+  memcpy(buf, &aData[8], 2);
+  memcpy(buf + 2, &aData[10], 2);
+  //memcpy(buf + 4, &aData[11], 2);
 
   // write 3. CAN frame to serial
   SendCANFrameToSerial(3202, buf);
     
   //build 4. CAN frame (text extension)
-    if (aData[9] == 0){
-        aGear[0] = "N";
+    switch (aData[9]) {
+      case 0:
+        cGear = "N";
+        break;
+      case 1:
+        cGear = "1";
+        break;
+      case 2:
+        cGear = "2";
+        break;
+     case 3:
+        cGear = "3";
+        break;
+     case 4:
+        cGear = "4";
+        break;
+     case 5:
+        cGear = "5";
+        break;
     }
-    else{
-        aGear[0] = aData[9];   
-    }
-    SendTextExtensionFrameToSerial(3203, aGear[0]);
+
+    SendTextExtensionFrameToSerial(3203, cGear);
 }
 
 
@@ -397,13 +406,13 @@ void SendCANFrameToSerial(unsigned long canFrameId, const byte* frameData)
   // the 4 byte identifier at the beginning of each CAN frame
   // this is required for RealDash to 'catch-up' on ongoing stream of CAN frames
   const byte serialBlockTag[4] = { 0x44, 0x33, 0x22, 0x11 };
-  hm10.write(serialBlockTag, 4);
+  hc06.write(serialBlockTag, 4);
 
   // the CAN frame id number (as 32bit little endian value)
-  hm10.write((const byte*)&canFrameId, 4);
+  hc06.write((const byte*)&canFrameId, 4);
 
   // CAN frame payload
-  hm10.write(frameData, 8);
+  hc06.write(frameData, 8);
 }
 
 void SendTextExtensionFrameToSerial(unsigned long canFrameId, const char* text)
@@ -413,12 +422,12 @@ void SendTextExtensionFrameToSerial(unsigned long canFrameId, const char* text)
     // the 4 byte identifier at the beginning of each CAN frame
     // this is required for RealDash to 'catch-up' on ongoing stream of CAN frames
     const byte textExtensionBlockTag[4] = { 0x55, 0x33, 0x22, 0x11 };
-    hm10.write(textExtensionBlockTag, 4);
+    hc06.write(textExtensionBlockTag, 4);
 
     // the CAN frame id number (as 32bit little endian value)
-    hm10.write((const byte*)&canFrameId, 4);
+    hc06.write((const byte*)&canFrameId, 4);
 
     // text payload
-    hm10.write(text, strlen(text) + 1);
+    hc06.write(text, strlen(text) + 1);
   }
 }
