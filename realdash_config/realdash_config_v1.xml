@@ -39,7 +39,7 @@
       
     <!-- 2. CAN frame -->
     <frame id="3201">
-      <value targetId="14" offset="0" length="2" units="bit" ></value>    <!-- Coolant Temperature -->
+      <value name="myCoolantInd" offset="0" length="2" units="bit" ></value>    <!-- Coolant Temperature Indicator -->
       <value targetId="152" offset="2" length="2" units="bit" ></value>    <!-- Engine Oil Temperature -->
       <value name="myChoke" offset="4" length="2" units="bit" ></value>    <!-- Choke -->
       <value targetId="160" offset="6" length="2" units="bit" ></value>   <!-- Turn Signal Left -->
@@ -49,6 +49,7 @@
     <frame id="3202">
       <value targetId="161" offset="0" length="2" units="bit" ></value> <!-- Turn Signal Right -->
       <value targetId="170" offset="2" length="2" units="%" ></value>   <!-- Fuel level -->
+      <value targetId="14" offset="4" length="2" units="C" ></value>   <!-- Cooland Temperature dummy -->
     </frame>
 
     <frame id="3203">
