@@ -338,10 +338,19 @@ void SendCANFramesToSerial(int aData[]){
   char aGear[1];
   const char* cGear = "";
   String dataStr = "";
+  int iCoolantTemp = 0;
   
     // Build data string
     dataStr = convArray2String(data, dataSize);
     Serial.println(dataStr);
+    
+    //Set coolant temp dummy
+    if(aData[4]{
+        iCoolantTemp = 120;
+    }
+    else{
+        iCoolantTemp = 80;
+    }
     
   // build & send CAN frames to RealDash.
   // a CAN frame payload is always 8 bytes containing data in a manner
@@ -370,7 +379,7 @@ void SendCANFramesToSerial(int aData[]){
   // build 3. CAN frame
   memcpy(buf, &aData[8], 2);
   memcpy(buf + 2, &aData[10], 2);
-  //memcpy(buf + 4, &aData[11], 2);
+  memcpy(buf + 4, &iCoolantTemp, 2);
 
   // write 3. CAN frame to serial
   SendCANFrameToSerial(3202, buf);
