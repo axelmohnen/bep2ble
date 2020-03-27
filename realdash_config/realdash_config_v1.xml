@@ -50,7 +50,7 @@
       <value targetId="161" offset="0" length="2" units="bit" ></value> <!-- Turn Signal Right -->
       <value targetId="170" offset="2" length="2" units="%" ></value>   <!-- Fuel level -->
       <value targetId="14" offset="4" length="2" units="C" ></value>   <!-- Cooland Temperature dummy -->
-      <value targetId="myFuelInd" offset="6" length="2" units="bit" ></value>   <!-- Fuel Indicator -->
+      <value name="myFuelInd" offset="6" length="2" units="bit" ></value>   <!-- Fuel Indicator -->
     </frame>
 
     <frame id="3203">
