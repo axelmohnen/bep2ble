@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- RealDash CAN XML description file, version 2 Requires RealDash version 1.5.8 or newer -->
+<RealDashCAN version="2">
+  <!-- baseId [optional] is added to each frame canId. -->
+  <!-- frames baseId="3200" -->
+  <frames>
+    <!-- PARAMETERS FOR 'frame' -->
+    <!-- 'id' can identifier (= baseId + id). Use 0x prefix to enter id as hexadesimal value. For example <frame id="3200"> is equal to <frame id="0x0c80"> -->
+    <!-- 'writeInterval' if present, this CAN frame is written to CAN bus in this interval (milliseconds) -->
+    <!-- 'endianess' the endianess of all frame values (big | little [default]). This is only valid if value 'length' parameter is set to at least 2 bytes.  -->
+    <frame id="3200">
+      <!-- PARAMETERS FOR 'value' -->
+      <!-- 'targetId' links value to RealDash input, see RealDash manuals www for a complete list -->
+      <!-- OR -->
+      <!-- 'name' links value to RealDash input, input appears in 'ECU Specific' input category -->
+
+      <!-- 'units' is used for post calculations, "F", "mph", "psi", "bit" which need to be specified for dashboard conversions to work properly -->
+      <!-- 'offset' byte offset of the value in frame -->
+      <!-- 'length' value length in bytes -->
+      <!-- 'startbit' the index of the first bit of the value -->
+      <!-- 'bitcount' number of bits used by the value -->
+      <!-- 'endianess' the endianess of value (big | little [default]). This is only valid if 'length' parameter is set to at least 2 bytes.  -->
+      <!-- 'rangeMin' and 'rangeMax' if 'name' is used instead of 'targetId', this is the recommended value range in RealDash editor -->
+      <!-- 'initialValue' if this parameter is present, its value is written to CAN after connection has been made to the CAN bus -->
+      <!-- 'conversion' if omitted, value is read 'as-is'. Otherwise variables 'B0', 'B1', 'B2', 'B3', 'V' and 'ID#' can be used within conversion formula, for example;
+           conversion="V/10" - result is incoming value / 10
+           conversion="B0+15*(B1-43)" - result is 'first byte + 15 * (second byte - 43)
+           conversion="V+ID200-74.3" - result is incoming value + 'Body Electronics->Gear' - 74.3 -->
+      <!-- From RealDash version 1.6.6, 'conversionABC' is an option to 'conversion' and uses A,B,C,...AA,AB,AC,...,etc format to distinquish the veriables on the reply.
+           This makes it easier to convert the Equation from other apps.
+           Example: conversion="B0+15*(B1-43)" and conversionABC="A+15*(B-43)" are the same -->
+
+      <!-- 1. CAN frame -->
+      <value targetId="37" offset="0" length="2" units="" ></value>       <!-- RPM -->
+      <value targetId="64" offset="2" length="2" units="km/h" ></value>   <!-- Speed -->
+      <value targetId="157" offset="4" length="2" units="bit" ></value>   <!-- High Beam -->
+      <value targetId="12" offset="6" length="2" units="bit" ></value>    <!-- Battery Voltage  -->
+    </frame>
+      
+    <!-- 2. CAN frame -->
+    <frame id="3201">
+      <value name="myCoolantInd" offset="0" length="2" units="bit" ></value>    <!-- Coolant Temperature Indicator -->
+      <value targetId="152" offset="2" length="2" units="bit" ></value>    <!-- Engine Oil Temperature -->
+      <value name="myChoke" offset="4" length="2" units="bit" ></value>    <!-- Choke -->
+      <value targetId="160" offset="6" length="2" units="bit" ></value>   <!-- Turn Signal Left -->
+    </frame>
+
+    <!-- 3. CAN frame -->
+    <frame id="3202">
+      <value targetId="161" offset="0" length="2" units="bit" ></value> <!-- Turn Signal Right -->
+      <value targetId="170" offset="2" length="2" units="%" ></value>   <!-- Fuel level -->
+      <value targetId="14" offset="4" length="2" units="C" ></value>   <!-- Cooland Temperature dummy -->
+      <value name="myFuelInd" offset="6" length="2" units="bit" ></value>   <!-- Fuel Indicator -->
+    </frame>
+
+    <frame id="3203">
+      <!-- 4th CAN frame, text extension frame -->
+      <!-- Text extension frame requires RealDash 1.4.1 or newer -->
+      <!-- declare own unique CAN id for each text value. -->
+      <!-- the text extension frame always consumes entire CAN id, multiple text strings cannot be added to one frame. -->
+
+      <!-- units must be set to "text" -->
+      <!-- offset, length and conversion values have no meaning with text data -->
+      <value name="myGearText" units="text"></value>
+    </frame>
+  </frames>
+</RealDashCAN>
