@@ -34,7 +34,7 @@ int rpm = 0;
 int speed = 0;
 int kilometer = 0;
 int turnsTotal = 0;
-int interval = 500; //1000; //millisec
+int interval = 20; //1000; //millisec
 unsigned long millisLast = 0;
 unsigned long millisDiff = 0;
 int data[dataSize]; 
