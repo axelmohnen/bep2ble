@@ -25,7 +25,7 @@ const int fuelPin = 19;     //data[10]
 //const int xyz = 21;       //Free pin
 
 //Define constants
-const int wheelSize = 2000; //millimeter
+const int wheelSize = 2032; //millimeter
 const int speedSignals = 6; //signals per turn
 const int dataSize = 12;
 volatile int rpmCount = 0;
@@ -34,15 +34,15 @@ int rpm = 0;
 int speed = 0;
 int kilometer = 0;
 int turnsTotal = 0;
-int interval = 1000; //millisec
+int interval = 500; //1000; //millisec
 unsigned long millisLast = 0;
 unsigned long millisDiff = 0;
 int data[dataSize]; 
 
 
 void setup(){
-    Serial.begin(9600);
-    hc06.begin(9600);
+    Serial.begin(115200);
+    hc06.begin(115200);
     pinMode(rpmPin, INPUT_PULLUP);
     pinMode(speedPin, INPUT_PULLUP);
     pinMode(hibPin, INPUT);
@@ -111,17 +111,17 @@ void loop(){
     fuelCalc();
     
     //set dummy data
-    data[0] = 7000;
-    data[1] = 123;
+    //data[0] = 5500;
+    //data[1] = 197;
     //data[2] = 1;
     //data[3] = 1;
-    //data[4] = 0;
+    //data[4] = 1;
     //data[5] = 1;
-    //data[6] = 0;
-    //data[7] = 0;
-    //data[8] = 0;
-    //data[9] = 2;
-    data[10] = 50;
+    //data[6] = 1;
+    //data[7] = 1;
+    //data[8] = 1;
+    //data[9] = 0;
+    //data[10] = 100;
       
     //Send data array via serial
     SendCANFramesToSerial(data);
@@ -154,7 +154,8 @@ void rpmCalc(){
   detachInterrupt(digitalPinToInterrupt(rpmPin));
  
   //Convert frecuency to RPM, note: this works for one interruption per full rotation. For two interrups per full rotation use rpmcount * 30.*/
-  rpm = rpmCount * 60;  
+  //rpm = rpmCount * 60;  
+  rpm = (float)1000/millisDiff * rpmCount * 60; 
 
   //Store value
   data[0] = rpm;
@@ -339,17 +340,26 @@ void SendCANFramesToSerial(int aData[]){
   const char* cGear = "";
   String dataStr = "";
   int iCoolantTemp = 0;
+  int iFuelInd = 0;
   
     // Build data string
-    dataStr = convArray2String(data, dataSize);
-    Serial.println(dataStr);
+    //dataStr = convArray2String(data, dataSize);
+    //Serial.println(dataStr);
     
     //Set coolant temp dummy
-    if(aData[4]{
+    if(aData[4]){
         iCoolantTemp = 120;
     }
     else{
         iCoolantTemp = 80;
+    }
+
+    //Set fuel Level Indicator
+    if (aData[10] <= 20){
+     iFuelInd = 1;
+    }
+    else{
+      iFuelInd = 0;
     }
     
   // build & send CAN frames to RealDash.
@@ -380,6 +390,7 @@ void SendCANFramesToSerial(int aData[]){
   memcpy(buf, &aData[8], 2);
   memcpy(buf + 2, &aData[10], 2);
   memcpy(buf + 4, &iCoolantTemp, 2);
+  memcpy(buf + 6, &iFuelInd, 2);
 
   // write 3. CAN frame to serial
   SendCANFrameToSerial(3202, buf);
